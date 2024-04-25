@@ -34,5 +34,57 @@ class ALUControl extends Module {
 
   io.operation := "b11111".U // Invalid
 
-  //test test
+  // R-type 64 bit operations
+  when(io.aluop === "b001".U) {
+
+    when(io.funct7 === "b0000000".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00001".U } // add 64
+      .elsewhen(io.funct3 === "b001".U) { io.operation := "b10010".U } // sll 64
+      .elsewhen(io.funct3 === "b010".U) { io.operation := "b10110".U } // slt 64
+      .elsewhen(io.funct3 === "b011".U) { io.operation := "b10111".U } // sltu 64
+      .elsewhen(io.funct3 === "b100".U) { io.operation := "b01111".U } // xor 64
+      .elsewhen(io.funct3 === "b101".U) { io.operation := "b10100".U } // srl 64
+      .elsewhen(io.funct3 === "b110".U) { io.operation := "b01110".U } // or 64
+      .elsewhen(io.funct3 === "b111".U) { io.operation := "b01101".U } // and 64
+    }
+
+    .elsewhen(io.funct7 === "b0100000".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00100".U } // sub 64
+      .elsewhen(io.funct3 === "b101".U) { io.operation := "b10000".U } // sra 64
+    }
+
+    .elsewhen(io.funct7 === "b0000001".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00110".U } // mul 64
+      .elsewhen(io.funct3 === "b001".U) { io.operation := "b00111".U } // mulh 64
+      .elsewhen(io.funct3 === "b010".U) { io.operation := "b11000".U } // mulhsu 64
+      .elsewhen(io.funct3 === "b011".U) { io.operation := "b01000".U } // mulhu 64
+      .elsewhen(io.funct3 === "b100".U) { io.operation := "b01011".U } // div 64
+      .elsewhen(io.funct3 === "b101".U) { io.operation := "b01010".U } // divu 64
+      .elsewhen(io.funct3 === "b110".U) { io.operation := "b11100".U } // rem 64
+      .elsewhen(io.funct3 === "b111".U) { io.operation := "b11011".U } //remu 64
+    }
+  }
+
+  // 32 bit operations
+  when(io.aluop === "b011".U) {
+
+    when(io.funct7 === "b0000000".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00000".U } // addw 32
+      .elsewhen(io.funct3 === "b001".U) {io.operation := "b10011".U } // sllw 32
+      .elsewhen(io.funct3 === "b101".U) {io.operation := "b10101".U } // srlw 32
+    }
+
+    .elsewhen(io.funct7 === "b0100000".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00010".U } // subw 32
+      .elsewhen(io.funct3 === "b101".U) { io.operation := "b10001".U } // sraw 32
+    } 
+
+    .elsewhen(io.funct7 === "b0000001".U) {
+      when(io.funct3 === "b000".U) { io.operation := "b00101".U } // mulw 32
+      .elsewhen(io.funct3 === "b100".U) { io.operation := "b01001".U } // divw 32
+      .elsewhen(io.funct3 === "b101".U) { io.operation := "b01100".U } // divuw 32
+      .elsewhen(io.funct3 === "b110".U) { io.operation := "b11010".U } // remw 32
+      .elsewhen(io.funct3 === "b111".U) { io.operation := "b11001".U } // remuw 32
+    }
+  }
 }
