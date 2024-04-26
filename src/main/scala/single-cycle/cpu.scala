@@ -42,7 +42,32 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
     instruction := io.imem.instruction(31, 0)
   }
 
-  //Your code goes here
+  control.io.opcode := instruction(6,0)
+
+  // register file
+  registers.io.readreg1 := instruction(19,15)
+  registers.io.readreg2 := instruction(24,20)
+  registers.io.writereg := instruction(11,7)
+  registers.io.wen := control.io.writeback_valid
+
+  when(registers.io.writereg === 0.U) {
+    registers.io.writedata := 0.U
+  }
+  .otherwise {
+    registers.io.writedata := alu.io.result
+  }
+
+  // aluControl
+  aluControl.io.aluop := control.io.aluop
+  aluControl.io.funct7 := instruction(31,25)
+  aluControl.io.funct3 := instruction(14,12)
+
+  // alu
+  alu.io.operation := aluControl.io.operation
+  alu.io.operand1 := registers.io.readdata1
+  alu.io.operand2 := registers.io.readdata2 
+
+  pc := pc + 4.U
 
 }
 
